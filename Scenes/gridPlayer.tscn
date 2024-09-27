@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3 uid="uid://bwo8h78hvo44v"]
+
+[ext_resource type="Script" path="res://Scripts/playerMovementComponent.gd" id="1_r5jfi"]
+[ext_resource type="Texture2D" uid="uid://c5exha7cab8rk" path="res://Assets/Combined Full/player/base/demigod_m.png" id="2_yoi08"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_molcu"]
+size = Vector2(32, 32)
+
+[node name="Area2D" type="Area2D"]
+script = ExtResource("1_r5jfi")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("2_yoi08")
+region_rect = Rect2(0, 0, 16, 16)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_molcu")
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position_smoothing_speed = 2.0
+drag_horizontal_enabled = true
+drag_vertical_enabled = true
+drag_left_margin = 0.1
+drag_top_margin = 0.1
+drag_right_margin = 0.1
+drag_bottom_margin = 0.1
