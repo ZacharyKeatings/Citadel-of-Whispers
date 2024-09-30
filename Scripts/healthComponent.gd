@@ -3,16 +3,27 @@ extends Component
 class_name HealthComponent
 
 var max_health: int = 100
-var health: int = 100
+var current_health: int = 100
 
-func initialize(health_value: int, max_health_value: int):
-	health = health_value
-	max_health = max_health_value
+# Initialize health
+func _ready():
+	current_health = max_health
 
+# Apply damage to the entity
 func take_damage(amount: int):
-	health = max(health - amount, 0)
-	if health == 0:
-		print("Player is dead")
+	current_health -= amount
+	if current_health <= 0:
+		current_health = 0
+		die()
 
+# Heal the entity
 func heal(amount: int):
-	health = min(health + amount, max_health)
+	current_health += amount
+	if current_health > max_health:
+		current_health = max_health
+
+# Handle entity death
+func die():
+	if owner_entity:
+		print(owner_entity.entity_name + " has died.")
+		owner_entity.queue_free()

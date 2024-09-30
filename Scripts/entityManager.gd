@@ -4,14 +4,17 @@ class_name EntityManager
 
 var entities = []
 
-func _ready():
-	pass
+# Adding entities to the manager
+func add_entity(entity: Entity):
+	entities.append(entity)
+	add_child(entity)
 
+# Removing entities and cleaning up
 func remove_entity(entity: Entity):
 	entities.erase(entity)
 	entity.queue_free()
 
+# Updating all entities and their components
 func update_entities(delta):
 	for entity in entities:
-		for component in entity.components.values():
-			component.update(delta)
+		entity.update_components(delta)

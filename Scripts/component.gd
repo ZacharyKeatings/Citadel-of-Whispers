@@ -2,13 +2,12 @@ extends Node
 
 class_name Component
 
-# Called when the node enters the scene tree for the first time.
+var owner_entity: Entity  # Reference to the entity that owns this component
+
+# Called when the component is added to the scene
 func _ready():
-	pass # Replace with function body.
+	owner_entity = get_parent() as Entity
 
+# Update method to be overridden by specific components
 func update(delta):
-	pass
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
 	pass
