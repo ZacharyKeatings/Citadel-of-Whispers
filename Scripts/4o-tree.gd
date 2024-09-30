@@ -41,6 +41,7 @@ func _ready():
 	add_child(player)
 	place_player()
 	#place_stairs()
+	call_deferred("reveal_room")
 
 	player.connect("tile_changed", Callable(self, "_on_player_tile_changed"))
 	player.connect("room_changed", Callable(self, "_on_player_room_changed"))
@@ -198,10 +199,10 @@ func draw_rooms():
 		room.draw_room(tilemaplayer)
 
 func reveal_room(room: Room):
-	var start_x = int(room.rect.position.x)
-	var start_y = int(room.rect.position.y)
-	var end_x = int(room.rect.position.x + room.rect.size.x)
-	var end_y = int(room.rect.position.y + room.rect.size.y)
+	var start_x = int(room.rect.position.x) - 1
+	var start_y = int(room.rect.position.y) - 1
+	var end_x = int(room.rect.position.x + room.rect.size.x) + 1
+	var end_y = int(room.rect.position.y + room.rect.size.y) + 1
 
 	for x in range(start_x, end_x):
 		for y in range(start_y, end_y):

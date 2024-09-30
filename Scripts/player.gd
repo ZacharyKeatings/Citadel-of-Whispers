@@ -1,46 +1,49 @@
-extends Entity
+extends Area2D
+class_name Player
 
-# Player properties
-#@onready var collision_shape = $CharacterBody2D/CollisionShape2D
-#@onready var area = $CharacterBody2D
+signal tile_changed(new_tile_pos)
+signal room_changed(room)
+signal stairs_up
+signal stairs_down
 
-var username: String = "Default"
-var gender: String = "Unknown"
-var location: String = 'Forest'
-var skill_bars = {}
-var unlocked_skills = {}
+# Reference to movement component
+var movement_component: PlayerMovementComponent
 
-# Called when the node enters the scene tree for the first time.
 func _ready():
-	z_index = 99
-	
-	var health_component = HealthComponent.new()
-	health_component.initialize(100, 100)
-	add_component("health", health_component)
+	# Get reference to BSPTree
+	var bsp_tree = get_parent() as BSPTree
 
-	var movement_component = MovementComponent.new()
-	movement_component.initialize(100)
-	add_component("movement", movement_component)
+	# Initialize the movement component
+	movement_component = PlayerMovementComponent.new(self, bsp_tree)
+	add_child(movement_component)
 
-# Update all components
-func _process(delta):
-	for component in components.values():
-		component.update(delta)
-		
-# Method to get the health component
-func get_health_component() -> HealthComponent:
-	return get_component("health") as HealthComponent
+	# Connect signals from the movement component to player signals
+	movement_component.connect("tile_changed", Callable(self, "_on_tile_changed"))
+	movement_component.connect("room_changed", Callable(self, "_on_room_changed"))
+	movement_component.connect("stairs_up", Callable(self, "_on_stairs_up"))
+	movement_component.connect("stairs_down", Callable(self, "_on_stairs_down"))
 
-# Method to access the player's max health
-func get_current_health() -> int:
-	var health_component = get_health_component()
-	if health_component:
-		return health_component.health
-	return 0
+func _physics_process(delta):
+	# Delegate physics processing to movement component
+	movement_component._physics_process(delta)
 
-# Method to access the player's max health
-func get_max_health() -> int:
-	var health_component = get_health_component()
-	if health_component:
-		return health_component.max_health
-	return 0
+func _unhandled_input(event):
+	# Delegate input handling to movement component
+	movement_component._unhandled_input(event)
+
+# Signal handlers
+func _on_tile_changed(new_tile_pos):
+	# Re-emit the signal
+	emit_signal("tile_changed", new_tile_pos)
+
+func _on_room_changed(room):
+	# Re-emit the signal
+	emit_signal("room_changed", room)
+
+func _on_stairs_up():
+	# Re-emit the signal
+	emit_signal("stairs_up")
+
+func _on_stairs_down():
+	# Re-emit the signal
+	emit_signal("stairs_down")
